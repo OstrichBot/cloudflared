@@ -18,7 +18,7 @@ ENV TZ="UTC" \
   TUNNEL_METRICS="0.0.0.0:49312" \
   TUNNEL_DNS_ADDRESS="0.0.0.0" \
   TUNNEL_DNS_PORT="5053" \
-  TUNNEL_DNS_UPSTREAM="https://family.cloudflare-dns.com/dns-query,https://1.1.1.1/dns-query,https://1.0.0.1/dns-query"
+  TUNNEL_DNS_UPSTREAM="https://family.cloudflare-dns.com/dns-query"
 
 RUN useradd -s /usr/sbin/nologin -r -M cloudflared && chown cloudflared:cloudflared /usr/local/bin/cloudflared
 USER cloudflared
