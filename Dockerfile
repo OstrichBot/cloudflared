@@ -7,22 +7,29 @@ RUN echo "1.1.1.1 \n" > /etc/resolv.conf;
 # Install necessary packages
 RUN apt-get update && apt-get install -y wget
 
-# Expose localhost ports for DNS
-EXPOSE 5053 5053/udp
-
 # Set volume & workdir
 WORKDIR /cloudflared
 
-# Download latest copy
+# Download & Install
 RUN wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
+RUN apt-get install ./cloudflared-stable-linux-amd64.deb
 
-# Install
-RUN apt-get install -y ./cloudflared-stable-linux-amd64.deb
+ENV TZ="UTC" \
+  TUNNEL_METRICS="0.0.0.0:49312" \
+  TUNNEL_DNS_ADDRESS="0.0.0.0" \
+  TUNNEL_DNS_PORT="5053" \
+  TUNNEL_DNS_UPSTREAM="https://family.cloudflare-dns.com/dns-query,https://1.1.1.1/dns-query,https://1.0.0.1/dns-query"
 
-# Print Version
-RUN cloudflared --version
+RUN addgroup -g 1000 cloudflared \
+  && adduser -u 1000 -G cloudflared -s /sbin/nologin -D cloudflared \
 
-CMD /usr/local/bin/cloudflared proxy-dns --port 5053 --upstream https://family.cloudflare-dns.com/dns-query
+USER cloudflared
+
+EXPOSE 5053/udp
+EXPOSE 49312/tcp
+
+ENTRYPOINT [ "/usr/local/bin/cloudflared" ]
+CMD [ "proxy-dns" ]
 
 HEALTHCHECK --interval=60s --timeout=20s --start-period=10s \
   CMD dig +short @127.0.0.1 -p 5053 family.cloudflare-dns.com A || exit 1
