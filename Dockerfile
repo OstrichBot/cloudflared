@@ -20,8 +20,7 @@ RUN apt-get install -y ./cloudflared-stable-linux-amd64.deb
 # Print Version
 RUN cloudflared --version
 
-ENTRYPOINT [ "/usr/local/bin/cloudflared" ]
-CMD [ "proxy-dns --port 53000 --upstream https://family.cloudflare-dns.com/dns-query" ]
+CMD [ "/usr/local/bin/cloudflared proxy-dns --port 53000 --upstream https://family.cloudflare-dns.com/dns-query" ]
 
 HEALTHCHECK --interval=60s --timeout=20s --start-period=10s \
   CMD dig +short @127.0.0.1 -p 53000 family.cloudflare-dns.com A || exit 1
