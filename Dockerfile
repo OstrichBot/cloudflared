@@ -1,6 +1,9 @@
 # Use Ubuntu as base image
 FROM ubuntu:18.04
 
+# Provide DNS
+RUN echo "1.1.1.1 \n" > /etc/resolv.conf;
+
 # Install necessary packages
 RUN apt-get update && apt-get install -y wget
 
