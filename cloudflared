@@ -1,2 +1,0 @@
-# Commandline args for cloudflared
-CLOUDFLARED_OPTS=--port 53000 --upstream https://family.cloudflare-dns.com/dns-query
