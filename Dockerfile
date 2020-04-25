@@ -1,8 +1,5 @@
 # Use Ubuntu as base image
-FROM ubuntu:18.04
-
-# Provide DNS
-RUN echo "1.1.1.1 \n" > /etc/resolv.conf;
+FROM ubuntu:latest
 
 # Install necessary packages
 RUN apt-get update && apt-get install -y wget
@@ -28,6 +25,3 @@ EXPOSE 49312/tcp
 
 ENTRYPOINT [ "/usr/local/bin/cloudflared" ]
 CMD [ "proxy-dns" ]
-
-HEALTHCHECK --interval=60s --timeout=20s --start-period=10s \
-  CMD dig +short @127.0.0.1 -p 5053 family.cloudflare-dns.com A || exit 1
