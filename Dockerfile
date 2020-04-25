@@ -20,9 +20,7 @@ ENV TZ="UTC" \
   TUNNEL_DNS_PORT="5053" \
   TUNNEL_DNS_UPSTREAM="https://family.cloudflare-dns.com/dns-query,https://1.1.1.1/dns-query,https://1.0.0.1/dns-query"
 
-RUN addgroup -g 1000 cloudflared \
-  && adduser -u 1000 -G cloudflared -s /sbin/nologin -D cloudflared \
-
+RUN useradd -s /usr/sbin/nologin -r -M cloudflared
 USER cloudflared
 
 EXPOSE 5053/udp
